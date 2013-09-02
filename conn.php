@@ -1,8 +1,8 @@
-<?php
+ï»¿<?php
 $conn = @mysql_connect("localhost","root","forever");
 if (!$conn)
 {
-	die("Á¬½ÓÊý¾Ý¿âÊ§°Ü£º" . mysql_error());
+	die("è¿žæŽ¥å¤±è´¥" . mysql_error());
 }
 mysql_select_db("notice", $conn);
 //mysql_query("set character set 'gb2312'");
@@ -24,7 +24,7 @@ function getNewNotices($noticeIds)
 			array_push($newNotices, $noticeIds[$i]);
 		}
 	}
-	return $newNotices;// ×îÐÂµÄÏûÏ¢ÔÚÊý×é×îÇ°Ãæ
+	return $newNotices;//æœ€æ–°çš„åœ¨æ•°ç»„æœ€å‰é¢
 }
 
 function insertNewNotices($newNoticesIds)

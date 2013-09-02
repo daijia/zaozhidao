@@ -1,6 +1,6 @@
-<?php include 'xuanke.php'; ?>
+ï»¿<?php include 'xuanke.php'; ?>
 <?php
-	$pages = xuanke();// ×îÐÂµÄÎª$pages[0]
+	$pages = xuanke();//æœ€æ–°çš„ä¸ºpages[0]
 	for ($i = 0; $i < count($pages); $i ++)
 		echo $pages[$i];
 ?>
