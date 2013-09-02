@@ -1,4 +1,4 @@
-<?php include 'conn.php'; ?>
+ï»¿<?php include 'conn.php'; ?>
 
 <?php 
 	function xuanke()
@@ -33,8 +33,8 @@
 		//curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"); 
 		curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );  
 		curl_setopt($ch, CURLOPT_TIMEOUT, 500); 
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0); // Ê¹ÓÃ×Ô¶¯Ìø×ª    
-		curl_setopt($ch, CURLOPT_AUTOREFERER, 1); // ×Ô¶¯ÉèÖÃReferer 
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0); // ä½¿ç”¨è‡ªåŠ¨è·³è½¬
+		curl_setopt($ch, CURLOPT_AUTOREFERER, 1); 
 		//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0); 
 		curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
