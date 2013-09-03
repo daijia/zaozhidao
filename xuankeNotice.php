@@ -14,8 +14,6 @@ class XuankeNotice extends Notice
 		$mainPage = $this->getMainPage();
 		$noticeIds = $this->getNoticeIds($mainPage);
 		$newNoticeIds = $this->getNewNoticeIds($noticeIds);
-		//for ($i = 0; $i < count($newNoticeIds); $i ++)
-			//echo $newNoticeIds[$i]."<br>";
 		$this->insertNewNotices($newNoticeIds);
 	}
 	
@@ -90,12 +88,6 @@ class XuankeNotice extends Notice
 		return $newNotices;//最新的在数组最前面
 	}
 	
-	function getTwo($newNotices)
-	{
-		$arr = array($newNotices[0], $newNotices[1]);
-		return $arr;
-	}
-	
 	function getHtml($noticeId)
 	{
 		$curl = curl_init(); 
@@ -133,15 +125,18 @@ class XuankeNotice extends Notice
 		preg_match('/<font face=\"隶书\">([\x{4e00}-\x{9fa5}A-Za-z0-9~!@\$%\^&\*\(\)_\+\{\}\|:\"\<\>\-\=\\\[\];\',\.\/《》“”、！￥（）——【】？，。]{1,80})<\/font>/u', $html, $result);
 		return $result[1];
 	}
-	function getIntro($noticeId)   ///need to change
+
+	function getIntro($noticeId)  
 	{
 		$html = $this->getHtml($noticeId);
 		$strWithTitle = strip_tags($html);
 		$strWithTitle = strtr($strWithTitle, array('&nbsp;' => ''));
 		$title = $this->getTitle($noticeId);
-		$position = mb_stripos($strWithTitle, $title, 0, "UTF-8") + mb_strlen($title, "UTF-8");
+		$position = mb_stripos($strWithTitle, $title, 0, "UTF-8");
+		$position += mb_strlen($title, "UTF-8");
 		$strOutTitle = mb_substr($strWithTitle, $position, mb_strlen($strWithTitle, "UTF-8") - $position, 'UTF-8');
-		return mb_substr($strOutTitle, 0, 200, 'UTF-8');
+		$result = mb_substr($strOutTitle, 0, 200, 'UTF-8');
+		return $result;
 	}
 	function getDate($noticeId)
 	{

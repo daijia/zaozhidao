@@ -14,7 +14,6 @@ abstract class Notice
 	function insertNewNotices($newNoticeIds)
 	{
 		$createDate = date("Y-m-d H:i:s");
-		//echo "i am here".count($newNoticeIds);
 		for($i = count($newNoticeIds)-1; $i >= 0; $i --)
 		{
 			$id = $newNoticeIds[$i];
@@ -26,9 +25,6 @@ abstract class Notice
 			$date = $this->getDate($id);
 			mysql_query("insert into notice (url,channelId, title, intro, html, isRead, date, updatedAt, createdAt) 
 									 VALUES ('$url', '$channelId', '$title', '$intro','$html', '0', '$date', '$createDate', '$createDate')");
-			//echo $this->getUrl($id). "   ";
-			//echo $this->channelId. "   ";
-			//echo "<br>";
 		}
 	}
 	
