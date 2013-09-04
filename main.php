@@ -1,5 +1,6 @@
 ﻿<?php 
-include 'xuankeNotice.php'; 
+require_once 'xuankeNotice.php'; 
+require_once 'sseNotice.php';
 set_time_limit(500);  //单位秒
 ?>
 
@@ -7,14 +8,18 @@ set_time_limit(500);  //单位秒
 
 	$notice = new XuankeNotice();	//func2();
 	$notice->exec();
-	func();
-
+	
+	function echoArr($arr)
+	{
+		for($i = 0; $i < count($arr); $i++)
+			echo $arr[$i]."<br>";
+	}
 	function func()
 	{
-		$checkQuery = mysql_query("select title, intro, url  from notice");
+		$checkQuery = mysql_query("select title, intro, url,html  from notice where channelId=11 ");
 		while ($result = mysql_fetch_array($checkQuery))
 		{
-			echo $result["title"]."<br>".$result["intro"]."<br><br>";
+			echo $result["html"]."<br><br>";
 		}
 	}
 ?>

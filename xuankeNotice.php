@@ -1,4 +1,4 @@
-﻿<?php include 'Notice.php'; ?>
+﻿<?php require_once 'Notice.php'; ?>
 
 <?php 
 class XuankeNotice extends Notice
@@ -67,27 +67,6 @@ class XuankeNotice extends Notice
 		return $resultArr[1];
 	}
 	
-	function getNewNoticeIds($noticeIds)
-	{
-		$newNotices = array();
-		for ($i = 0 ; $i < count($noticeIds); $i ++)
-		{
-			$channelId = $this->channelId;
-			$noticeId = $noticeIds[$i];
-			$checkQuery = mysql_query("select id from notice where channelId = $channelId and url like '%".$noticeId."%' ");
-			$num = 0;
-			while ($result = mysql_fetch_array($checkQuery))
-			{
-				$num ++;
-			}
-			if ($num == 0)
-			{
-				array_push($newNotices, $noticeId);
-			}
-		}
-		return $newNotices;//最新的在数组最前面
-	}
-	
 	function getHtml($noticeId)
 	{
 		$curl = curl_init(); 
@@ -104,15 +83,7 @@ class XuankeNotice extends Notice
 		curl_close($curl);
 		$data = mb_convert_encoding($data, "utf-8", "gb2312");
 		return $data;
-	}
-	
-	function getHtmlUrlTitleIntroDate($noticeId, &$html, &$url, &$title, &$intro, &$date)
-	{
-		$html = getHtml($noticeId);
-		$url = getUrl($noticeId);
-		preg_match('/<font face=\"隶书\">([\x{4e00}-\x{9fa5}A-Za-z0-9~!@\$%\^&\*\(\)_\+\{\}\|:\"\<\>\-\=\\\[\];\',\.\/《》“”、！￥（）——【】？，。]{1,80})<\/font>/u', $html, $result);
-		$title = $result[1];
-	}
+	}	
 
 	function getUrl($noticeId)
 	{
@@ -131,6 +102,7 @@ class XuankeNotice extends Notice
 		$html = $this->getHtml($noticeId);
 		$strWithTitle = strip_tags($html);
 		$strWithTitle = strtr($strWithTitle, array('&nbsp;' => ''));
+		$strWithTitle = preg_replace('/[\s]+/u', ' ', $strWithTitle);
 		$title = $this->getTitle($noticeId);
 		$position = mb_stripos($strWithTitle, $title, 0, "UTF-8");
 		$position += mb_strlen($title, "UTF-8");
