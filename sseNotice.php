@@ -15,24 +15,7 @@ class SSENotice extends Notice
 	{
 		$mainPage = $this->getMainPage();
 		$this->getMainPageInformation($mainPage);
-
-		foreach ($this->noticeIdToDate as $key => $value) 
-		{
-			echo $key.": ".$value."<br />";
-		}
-		echo "<br>";
-		foreach ($this->noticeIdToTitle as $key => $value) 
-		{
-			echo $key.": ".$value."<br />";
-		}
 		$newNoticeIds = $this->getNewNoticeIds(array_keys($this->noticeIdToDate));
-		echo "<br>";
-		
-		echo " fsdf".count($newNoticeIds);
-		for ($i = 0; $i < count($newNoticeIds); $i ++)
-		{	
-			echo $this->getIntro($newNoticeIds[$i])."  "."<br>";
-		}
 		$this->insertNewNotices($newNoticeIds);
 	}
 	
@@ -75,12 +58,11 @@ class SSENotice extends Notice
 		$strWithTitle = strip_tags($html);
 		$strWithTitle = strtr($strWithTitle, array('&nbsp;' =>' '));
 		$strWithTitle = preg_replace('/[\s]+/u', ' ', $strWithTitle);//remove multispace
-		$justMark = "IloveYouForever";                  
-		$strWithTitle = preg_replace('/已阅读:[0-9]+/u', $justMark, $strWithTitle); //mark
-		$strWithTitle = preg_replace('/关于我们[^戴]*软件学院/u', '', $strWithTitle);//remove bottom
-		$position = mb_stripos($strWithTitle, $justMark, 0, "UTF-8") + mb_strlen($justMark, "UTF-8");
-		$strOutTitle = mb_substr($strWithTitle, $position, mb_strlen($strWithTitle, "UTF-8") - $position, 'UTF-8');
-		return mb_substr($strOutTitle, 0, 200, 'UTF-8');
+		$pattern = '/已阅读:[0-9]+/u';
+		$strOutTitle = Help::getStringAfterPattern($strWithTitle, $pattern);
+		$strOutTitle = preg_replace('/关于我们[\s\S]*软件学院/u', '', $strOutTitle);//remove bottom
+		$result = mb_substr($strOutTitle, 0, 200, 'UTF-8');
+		return $result;
 	}
 	function getDate($noticeId)
 	{

@@ -4,10 +4,12 @@
 class XuankeNotice extends Notice
 {
 	private $cookie;
+	private $noticeIdToHtml;
 	function __construct()
 	{
 		parent::__construct(1);
 		$this->cookie = tempnam("/tmp", "cookie");
+		$this->noticeIdToHtml = Array();
 	}
 	function exec()
 	{
@@ -69,6 +71,10 @@ class XuankeNotice extends Notice
 	
 	function getHtml($noticeId)
 	{
+		if (array_key_exists($noticeId, $this->noticeIdToHtml))
+		{
+			return $this->noticeIdToHtml[$noticeId];
+		}
 		$curl = curl_init(); 
 		curl_setopt($curl, CURLOPT_URL, $this->getUrl($noticeId));
 		curl_setopt($curl, CURLOPT_COOKIEFILE, $this->cookie);
@@ -82,9 +88,10 @@ class XuankeNotice extends Notice
 		$data = curl_exec($curl);
 		curl_close($curl);
 		$data = mb_convert_encoding($data, "utf-8", "gb2312");
+		$this->noticeIdToHtml[$noticeId] = $data;
 		return $data;
-	}	
-
+	}
+	
 	function getUrl($noticeId)
 	{
 		return "http://xuanke.tongji.edu.cn/tj_public/jsp/tongzhi.jsp?id=$noticeId";
@@ -93,7 +100,7 @@ class XuankeNotice extends Notice
 	function getTitle($noticeId)
 	{
 		$html = $this->getHtml($noticeId);
-		preg_match('/<font face=\"隶书\">([\x{4e00}-\x{9fa5}A-Za-z0-9~!@\$%\^&\*\(\)_\+\{\}\|:\"\<\>\-\=\\\[\];\',\.\/《》“”、！￥（）——【】？，。]{1,80})<\/font>/u', $html, $result);
+		preg_match('/<font face=\"隶书\">('.self::TitlePattern.')<\/font>/u', $html, $result);
 		return $result[1];
 	}
 

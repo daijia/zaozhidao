@@ -4,7 +4,7 @@
 abstract class Notice
 {
 	protected $channelId;
-	const TitlePattern = '[\x{4e00}-\x{9fa5}A-Za-z0-9\s~!@\$%\^&\*\(\)_\+\{\}\|:\"\<\>\-\=\\\[\];\',\.\/《》“”、！￥（）——【】？，。]{1,80}';
+	const TitlePattern = '[\x{4e00}-\x{9fa5}A-Za-z0-9\s~!@\?\$%\^&\*\(\)_\+\{\}\|:\"\<\>\-\=\\\[\];\',\.\/《》“”、：！￥（）——【】？，。「」]{1,80}';
 	function __construct($channelId = 0)
 	{
 		$this->channelId = $channelId;
@@ -17,7 +17,6 @@ abstract class Notice
 		$createDate = date("Y-m-d H:i:s");
 		for($i = count($newNoticeIds)-1; $i >= 0; $i --)
 		{
-			echo "mygodok$i"."<br>";
 			$id = $newNoticeIds[$i];
 			$url = $this->getUrl($id);
 			$channelId = $this->channelId;
