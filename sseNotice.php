@@ -13,6 +13,7 @@ class SSENotice extends Notice
 	}
 	function exec()
 	{
+		$this->getIntro("1001948");
 		$mainPage = $this->getMainPage();
 		$this->getMainPageInformation($mainPage);
 		$newNoticeIds = $this->getNewNoticeIds(array_keys($this->noticeIdToDate));
@@ -40,6 +41,13 @@ class SSENotice extends Notice
 	{
 		$html = Help::getHtml($this->getUrl($noticeId));
 		$html = '<base href="http://sse.tongji.edu.cn/Notice/" />'.$html;
+		$head = Help::getStringBeforeStr($html, "</head>");
+		$content = Help::getStringAfterStr($html, "已阅读");
+		$content = Help::getStringAfterStr($content, '</div>');
+		$content = "</head><body>".Help::getStringBeforeStr($content, ("InstanceEndEditable"))."</body></html>";
+		$html= $head.$content;
+		//$content = "<div class=\"detail_head\">";
+		//$html = '<base href="http://sse.tongji.edu.cn/Notice/" />'.$html;
 		return $html;
 	}
 
@@ -58,10 +66,7 @@ class SSENotice extends Notice
 		$strWithTitle = strip_tags($html);
 		$strWithTitle = strtr($strWithTitle, array('&nbsp;' =>' '));
 		$strWithTitle = preg_replace('/[\s]+/u', ' ', $strWithTitle);//remove multispace
-		$pattern = '/已阅读:[0-9]+/u';
-		$strOutTitle = Help::getStringAfterPattern($strWithTitle, $pattern);
-		$strOutTitle = preg_replace('/关于我们[\s\S]*软件学院/u', '', $strOutTitle);//remove bottom
-		$result = mb_substr($strOutTitle, 0, 200, 'UTF-8');
+		$result = mb_substr($strWithTitle, 0, 200, 'UTF-8');
 		return $result;
 	}
 	function getDate($noticeId)

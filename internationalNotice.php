@@ -15,11 +15,6 @@ class InternationalNotice extends Notice
 	{
 		$mainPage = $this->getMainPage();
 		$this->getMainPageInformation($mainPage);
-		echo "count  jhdfsofjd ".count($this->noticeIdToTitle);
-		/*foreach ($this->noticeIdToTitle as $key => $value) 
-		{
-			echo $key.": ".$value."<br />";
-		}*/
 		$newNoticeIds = $this->getNewNoticeIds(array_keys($this->noticeIdToTitle));
 		$this->insertNewNotices($newNoticeIds);
 	}
@@ -35,18 +30,26 @@ class InternationalNotice extends Notice
 		for ($i = 0; $i < count($result[0]); $i++)
 		{
 			$this->noticeIdToTitle[$result[1][$i]] = $result[2][$i];
-			echo $this->getIntro($result[1][$i])."<br><br>";
+			//echo $this->getIntro($result[1][$i])."<br><br>";
 		}
+	}
+	
+	function getRealHtml($noticeId)
+	{
+		if (array_key_exists($noticeId, $this->noticeIdToHtml))
+			return $this->noticeIdToHtml[$noticeId];
+		$html =  '<base href="http://www.tongji-uni.com/" />'.Help::getHtml($this->getUrl($noticeId));
+		$this->noticeIdToHtml[$noticeId] = $html;
+		return $html;
 	}
 	
 	function getHtml($noticeId)
 	{
-		if (array_key_exists($noticeId, $this->noticeIdToHtml))
-			return $this->noticeIdToHtml[$noticeId];
-		$html = Help::getHtml($this->getUrl($noticeId));
-		$html = '<base href="http://www.tongji-uni.com/" />'.$html;
-		$this->noticeIdToHtml[$noticeId] = $html;
-		return $html;
+		$html = $this->getRealHtml($noticeId);
+		$head = Help::getStringBeforeStr($html, "<body>");
+		$content = Help::getStringAfterStr($html, 'mainwh>');
+		$content = preg_replace('/【返回】[\s\S]*同济大学美国校友会/u', '', $content);//remove bottom
+		return ('<base href="http://www.tongji-uni.com/" />'.$content);
 	}
 
 	function getUrl($noticeId)
@@ -60,7 +63,7 @@ class InternationalNotice extends Notice
 	}
 	function getIntro($noticeId)
 	{
-		$html = $this->getHtml($noticeId);
+		$html = $this->getRealHtml($noticeId);
 		$strWithTitle = strip_tags($html);
 		$strWithTitle = strtr($strWithTitle, array('&nbsp;' =>' '));
 		$strWithTitle = preg_replace('/[\s]+/u', ' ', $strWithTitle);//remove multispace
@@ -71,7 +74,7 @@ class InternationalNotice extends Notice
 	}
 	function getDate($noticeId)
 	{
-		$html = $this->getHtml($noticeId);
+		$html = $this->getRealHtml($noticeId);
 		preg_match_all('/([0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2})\s[0-9]{2}:/u', $html, $result);
 		return $result[1][0];
 	}
